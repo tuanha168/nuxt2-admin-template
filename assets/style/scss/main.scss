@@ -1,0 +1,95 @@
+@import
+  'page/login',
+  'custom/project-table',
+  'custom/project-page-header',
+  'custom/project-menu';
+
+html,
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 400;
+}
+
+#__nuxt,
+#__layout {
+  min-height: 100%;
+}
+
+.app-layout {
+  min-height: 100vh;
+  transition: all 0.2s;
+}
+
+.app-content {
+  margin: 15px 16px 24px 16px,;
+  padding: 24px;
+  background: #fff;
+  min-height: 280px;
+  overflow: initial;
+}
+
+.spinner {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.user-layout-login {
+  label {
+    font-size: 14px;
+  }
+
+  .forge-password {
+    font-size: 14px;
+  }
+
+  .user-select-none {
+    user-select: none;
+  }
+}
+
+.mobile {
+  .ant-header-fixedHeader {
+    &.ant-header-side-opened {
+      width: 100% !important;
+    }
+
+    &.ant-header-side-closed {
+      width: 100% !important;
+    }
+  }
+}
+
+.ant-menu-inline-collapsed > .ant-menu-item .anticon + a, .ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-item .anticon + a, .ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-submenu > .ant-menu-submenu-title .anticon + a, .ant-menu-inline-collapsed > .ant-menu-submenu > .ant-menu-submenu-title .anticon + a {
+  display: inline-block;
+  max-width: 0;
+  opacity: 0;
+}
+
+.ant-menu-item .anticon + a, .ant-menu-submenu-title .anticon + a {
+  opacity: 1;
+  transition: opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+    width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+#advanced-search {
+  padding: 24px;
+  background: #fbfbfb;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  margin-bottom: 30px;
+  .ant-form-item {
+    display: flex;
+  }
+  .ant-form-item-control-wrapper {
+    flex: 1;
+  }
+  .ant-form {
+    max-width: none;
+  }
+}

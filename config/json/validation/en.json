@@ -1,0 +1,28 @@
+{
+  "code": "en",
+  "messages": {
+    "alpha": "{_field_} is alphabet only",
+    "alpha_num": "{_field_} is alphabet and number only",
+    "alpha_dash": "{_field_} is alphabet, number, dash and hyphen only",
+    "alpha_spaces": "{_field_} is alphabet and space only",
+    "between": "{_field_} must be between {min} and {max}",
+    "confirmed": "{_field_} is not match",
+    "digits": "{_field_} must be {length} digits",
+    "email": "{_field_} must be email",
+    "integer": "{_field_} must be number",
+    "is": "{_field_} is not match",
+    "length": "{_field_} must be {length} characters",
+    "max_value": "{_field_} must lower than {max}",
+    "max": "{_field_} shorter than {length} characters",
+    "min_value": "{_field_} must higher than {min}",
+    "min": "{_field_} must longer than {length} characters",
+    "numeric": "{_field_} must be number",
+    "oneOf": "{_field_} is not valid",
+    "regex": "{_field_} is wrong format",
+    "required": "{_field_} is required",
+    "required_if": "{_field_} is required",
+    "url": "{_field_} invalid",
+    "password": "{_field_} is required",
+    "unique": "{_field_} is used"
+  }
+}

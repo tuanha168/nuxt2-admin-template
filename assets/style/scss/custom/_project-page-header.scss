@@ -1,0 +1,12 @@
+.project-page-header {
+  background-color: $white;
+  margin-top: 64px;
+  padding: 16px;
+  border: 0 !important;
+  &__title {
+    margin-bottom: 0;
+    font-weight: 500;
+    font-size: 25px;
+    margin-top: 5px;
+  }
+}
