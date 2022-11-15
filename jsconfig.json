@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "components/*"
+      ]
+    }
+  },
+  "include": [
+    "pages/**/*.vue",
+    "components/**/*.vue",
+    "layouts/**/*.vue",
+    "plugins/**/*.js",
+    "store/**/*.js",
+    "utils/**/*.js",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
+

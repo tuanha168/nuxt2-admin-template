@@ -36,7 +36,12 @@ export default function (
   })
 
   const api = {
-    // API define
+    // User
+    listUsers: (params) => axios.$get(`users`, { params }),
+    showUser: (userId) => axios.$get(`users/${userId}`),
+    createUser: (payload) => axios.$post(`users`, payload),
+    updateUser: (userId, payload) => axios.$put(`users/${userId}`, payload),
+    deleteUser: (userId) => axios.$delete(`users/${userId}`)
   }
   inject('api', api)
 }

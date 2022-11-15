@@ -48,12 +48,18 @@ export default {
           icon: 'dashboard',
           key: '/',
           url: '/'
+        },
+        {
+          label: 'Users',
+          icon: 'user',
+          key: '/users',
+          url: '/users'
         }
       ]
     }
   },
   watch: {
-    '$route.path'(val) {
+    '$route.path'() {
       this.handleSidebar()
     }
   },

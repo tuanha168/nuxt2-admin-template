@@ -11,9 +11,9 @@ export default {
     background: 'white'
   },
 
-  router: {
-    middleware: ['auth']
-  },
+  // router: {
+  //   middleware: ['auth']
+  // },
 
   publicRuntimeConfig: {
     axios: {
@@ -53,7 +53,8 @@ export default {
     '@/plugins/antd-ui',
     '@/plugins/vee-validate',
     '@/plugins/loading-page',
-    '@/plugins/custom-listener'
+    '@/plugins/custom-listener',
+    '@/plugins/api.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

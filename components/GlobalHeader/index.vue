@@ -15,7 +15,7 @@ transition(name="showHeader")
             style="backgroundcolor: #87d068; margin-right: 10px"
             icon="user"
           )
-          | user
+          | Admin
           a-icon(type="down")
         a-menu(slot="overlay")
           a-menu-item(key="0" @click="logout") Logout
