@@ -1,4 +1,4 @@
-export default function ({ $auth, $axios, error, $config }, inject) {
+export default function ({ $axios, error, app }, inject) {
   const axios = $axios.create({
     headers: {
       common: {
@@ -20,7 +20,7 @@ export default function ({ $auth, $axios, error, $config }, inject) {
 
   axios.onRequest((config) => {
     const domainFromUrl = config.url.match(/^(?:\/\/|[^/]+)*/g)
-    const token = $auth.strategy.token.get()
+    const token = app.$auth.strategy.token.get()
     if (token) {
       if (
         domainFromUrl &&
@@ -37,26 +37,25 @@ export default function ({ $auth, $axios, error, $config }, inject) {
     listUsers: (params) => axios.$get(`auth/users`, { params }),
     userDetails: (id) => axios.$get(`auth/users/${id}`),
 
-    // Upload
-    getPreSignedUrl: () =>
-      axios.post(`${$config.userApiVeosUrl}/files/temporary-url`),
-
-    uploadImageByPreSignedUrl: (preSignedUrl, file, callback = false) => {
-      const { type, name } = file
-      const convertedName = unescape(encodeURIComponent(name))
-      return axios.$put(preSignedUrl, file, {
-        onUploadProgress: (progressEvent) => {
-          const uploading = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          )
-          callback && callback(uploading)
-        },
+    // Games
+    listGames: (params) => axios.$get(`games`, { params }),
+    showGame: (gameId) => axios.$get(`games/${gameId}`),
+    createGame: (payload) =>
+      axios.$post(`games`, payload, {
         headers: {
-          'Content-Type': type,
-          'Content-Disposition': `attachment; filename="${convertedName}"`
+          'Content-Type': 'multipart/form-data'
         }
-      })
-    }
+      }),
+    updateGame: (gameId, payload) => axios.$put(`games/${gameId}`, payload),
+    deleteGame: (gameId) => axios.$delete(`games/${gameId}`),
+
+    // Categories
+    listCategories: (params) => axios.$get(`categories`, { params }),
+    showCategory: (categoryId) => axios.$get(`categories/${categoryId}`),
+    createCategory: (payload) => axios.$post(`categories`, payload),
+    updateCategory: (categoryId, payload) =>
+      axios.$put(`categories/${categoryId}`, payload),
+    deleteCategory: (categoryId) => axios.$delete(`categories/${categoryId}`)
   }
   inject('api', api)
 }

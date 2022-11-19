@@ -54,6 +54,18 @@ export default {
           icon: 'user',
           key: '/users',
           url: '/users'
+        },
+        {
+          label: 'Games',
+          icon: 'game',
+          key: '/games',
+          url: '/games'
+        },
+        {
+          label: 'Categories',
+          icon: 'category',
+          key: '/categories',
+          url: '/categories'
         }
       ]
     }
