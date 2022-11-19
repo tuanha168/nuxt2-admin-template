@@ -58,9 +58,9 @@ export default {
         this.$router.push({ path: '/' })
         this.$message.success('Login successfully')
       } catch (err) {
-        let errorFromServer = 'Something went wrong!'
-        if (_.get(err, 'response.data.meta.message')) {
-          errorFromServer = err.response.data.meta.message
+        let errorFromServer = 'Error'
+        if (_.get(err, 'response.data.message')) {
+          errorFromServer = err.response.data.message
         }
         this.$refs.form.setErrors({
           username: errorFromServer
