@@ -7,7 +7,7 @@ export const CategoryConstant = Object.freeze({
     },
     {
       path: '/categories',
-      breadcrumbName: 'categories'
+      breadcrumbName: 'Categories'
     }
   ],
   COLUMNS: [

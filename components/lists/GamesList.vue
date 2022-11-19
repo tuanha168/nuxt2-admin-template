@@ -17,17 +17,21 @@
             )
 
           a-col(:span="8")
-            project-text(
-              label="Email"
-              vid="email"
-              type="text"
+            project-select(
+              label="Category"
+              vid="category"
               size="large"
-              rules="max:255"
-              :max-length="255"
-              v-model="tmpFilterParams.email"
-              colon
+              placeholder="Please select category"
+              v-model="tmpFilterParams.category"
+              :disabled="loadingCat"
+              :loading="loadingCat"
+              :filter-option="filterOption"
             )
-
+              a-select-option(
+                v-for="category in categories"
+                :key="category._id"
+                :value="category._id"
+              ) {{ category.name }}
         a-row(:span="24" :style="{ textAlign: 'center' }")
           project-submit-button(label="Search")
 
@@ -75,10 +79,11 @@ export default {
     crumbs: _.clone(GameConstant.CRUMBS),
     columns: _.clone(GameConstant.COLUMNS),
     loading: false,
+    loadingCat: false,
     gamesList: [],
     tmpFilterParams: {
       name: null,
-      email: null
+      category: null
     },
     filterParams: {},
     pagination: {
@@ -98,6 +103,7 @@ export default {
     ]
   }),
   created() {
+    this.getCategories()
     this.getListGames()
     this.setCrumbs(this.crumbs)
     this.setTitle('Games List')
@@ -135,6 +141,22 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+    async getCategories() {
+      try {
+        this.loadingCat = true
+        const res = await this.$api.listCategories()
+        this.categories = _.assign({}, this.categories, res.categories)
+      } catch (err) {
+        this.handleError(err)
+      } finally {
+        this.loadingCat = false
+      }
+    },
+    filterOption(input, option) {
+      return option.componentOptions.children[0].text
+        .toLowerCase()
+        .includes(input.toLowerCase())
     }
   }
 }

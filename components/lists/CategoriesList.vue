@@ -16,18 +16,6 @@
               colon
             )
 
-          a-col(:span="8")
-            project-text(
-              label="Email"
-              vid="email"
-              type="text"
-              size="large"
-              rules="max:255"
-              :max-length="255"
-              v-model="tmpFilterParams.email"
-              colon
-            )
-
         a-row(:span="24" :style="{ textAlign: 'center' }")
           project-submit-button(label="Search")
 
@@ -77,8 +65,7 @@ export default {
     loading: false,
     categoriesList: [],
     tmpFilterParams: {
-      name: null,
-      email: null
+      name: null
     },
     filterParams: {},
     pagination: {
