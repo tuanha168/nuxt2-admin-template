@@ -13,15 +13,14 @@ export const UserConstant = Object.freeze({
   COLUMNS: [
     {
       title: 'ID',
-      dataIndex: 'id',
+      dataIndex: '_id',
       key: 'id',
-      scopedSlots: { customRender: 'id' },
-      width: 80
+      scopedSlots: { customRender: 'id' }
     },
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'User Name',
+      dataIndex: 'username',
+      key: 'username',
       ellipsis: true
     },
     {
@@ -31,11 +30,11 @@ export const UserConstant = Object.freeze({
       ellipsis: true
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      title: 'Gender',
+      dataIndex: 'sex',
+      key: 'sex',
       align: 'center',
-      scopedSlots: { customRender: 'status' },
+      scopedSlots: { customRender: 'sex' },
       width: 100
     },
     {

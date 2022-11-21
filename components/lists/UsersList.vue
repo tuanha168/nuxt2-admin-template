@@ -1,5 +1,5 @@
 <template lang="pug">
-.user
+.users
   #advanced-search
     validation-observer(ref="form" v-slot="{ passes }")
       a-form-model(@submit="passes(handleFilter)" @submit.native.prevent)
@@ -45,20 +45,12 @@
     size="small"
     @change="handleTableChange"
   )
-    span(slot="status" slot-scope="text")
-      a-tag(:color="text === 'ACTIVE' ? '#87d068' : ''") {{ text }}
+    span(slot="sex" slot-scope="text")
+      a-tag(:color="text ? 'yellow' : '#87d068'") {{ text ? "Female" : "Male" }}
     span(slot="action" slot-scope="record")
       a-space(size="middle")
-        nuxt-link(:to="`/users/${record.id}/edit`")
+        nuxt-link(:to="`/users/${record._id}/details`")
           a-button(type="primary" icon="edit" size="small")
-        a-popconfirm(
-          title="Do you really want to Delete this user?"
-          placement="topRight"
-          ok-text="Yes"
-          cancel-text="No"
-          @confirm="deleteUser(record.id)"
-        )
-          a-button(type="danger" icon="delete" size="small")
 </template>
 
 <script>
@@ -82,8 +74,9 @@ export default {
     pagination: {
       size: 'small',
       hideOnSinglePage: true,
-      pageSize: 10,
-      position: 'bottom'
+      pageSize: 5,
+      position: 'bottom',
+      current: 1
     }
   }),
   head: () => ({
@@ -100,57 +93,21 @@ export default {
     this.setTitle('Users List')
   },
   methods: {
-    async deleteUser(userId) {
-      try {
-        this.$loadingPage.open()
-        await this.$api.deleteUser(userId)
-        this.$message.success('Deleted Successfully')
-        await this.getListUsers()
-      } catch (err) {
-        this.handleError(err)
-      } finally {
-        this.$loadingPage.close()
-      }
-    },
     handleFilter() {
       this.filterParams = _.clone(this.tmpFilterParams)
       this.getListUsers()
     },
     handleTableChange(pagination) {
-      this.getListUsers(pagination.current)
+      this.pagination.current = pagination.current
     },
-    async getListUsers(page = 1) {
+    async getListUsers() {
       try {
         this.loading = true
-        // const res = await this.$api.listUsers({
-        //   page,
-        //   ...this.filterParams
-        // })
-        // this.usersList = res.data
-        // const {
-        //   total,
-        //   per_page: pageSize,
-        //   current_page: current
-        // } = res.meta.pagination
-        // this.pagination = _.assign({}, this.pagination, {
-        //   total,
-        //   pageSize,
-        //   current
-        // })
-        this.usersList = await [
-          {
-            id: 1,
-            name: 'haha',
-            email: 'test@gmail.com',
-            status: 'ACTIVE'
-          },
-          {
-            id: 2,
-            name: 'hihi',
-            email: 'test2@gmail.com',
-            status: 'PENDING'
-          }
-        ]
+        const res = await this.$api.listUsers({
+          ...this.filterParams
+        })
+        this.usersList = res.users
+        this.pagination = this.usersList.length
       } catch (err) {
         this.handleError(err)
       } finally {

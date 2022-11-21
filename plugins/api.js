@@ -1,7 +1,4 @@
-export default function (
-  { $auth, $axios, store, redirect, error, $config },
-  inject
-) {
+export default function ({ $auth, $axios, error, $config }, inject) {
   const axios = $axios.create({
     headers: {
       common: {
@@ -37,11 +34,29 @@ export default function (
 
   const api = {
     // User
-    listUsers: (params) => axios.$get(`users`, { params }),
-    showUser: (userId) => axios.$get(`users/${userId}`),
-    createUser: (payload) => axios.$post(`users`, payload),
-    updateUser: (userId, payload) => axios.$put(`users/${userId}`, payload),
-    deleteUser: (userId) => axios.$delete(`users/${userId}`)
+    listUsers: (params) => axios.$get(`auth/users`, { params }),
+    userDetails: (id) => axios.$get(`auth/users/${id}`),
+
+    // Upload
+    getPreSignedUrl: () =>
+      axios.post(`${$config.userApiVeosUrl}/files/temporary-url`),
+
+    uploadImageByPreSignedUrl: (preSignedUrl, file, callback = false) => {
+      const { type, name } = file
+      const convertedName = unescape(encodeURIComponent(name))
+      return axios.$put(preSignedUrl, file, {
+        onUploadProgress: (progressEvent) => {
+          const uploading = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          )
+          callback && callback(uploading)
+        },
+        headers: {
+          'Content-Type': type,
+          'Content-Disposition': `attachment; filename="${convertedName}"`
+        }
+      })
+    }
   }
   inject('api', api)
 }

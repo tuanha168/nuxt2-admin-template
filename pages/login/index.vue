@@ -10,11 +10,11 @@
         .user-login-input
           project-text(
             label="ID"
-            vid="email"
+            vid="username"
             type="text"
-            rules="required|email|max:255"
+            rules="required|max:255"
             :max-length="255"
-            v-model="form.email"
+            v-model="form.username"
           )
 
           project-text(
@@ -34,7 +34,7 @@ export default {
   layout: 'common',
   data: () => ({
     form: {
-      email: '',
+      username: '',
       password: ''
     }
   }),
@@ -58,12 +58,12 @@ export default {
         this.$router.push({ path: '/' })
         this.$message.success('Login successfully')
       } catch (err) {
-        let errorFromServer = 'Error'
+        let errorFromServer = 'Something went wrong!'
         if (_.get(err, 'response.data.meta.message')) {
           errorFromServer = err.response.data.meta.message
         }
         this.$refs.form.setErrors({
-          email: errorFromServer
+          username: errorFromServer
         })
       } finally {
         this.$loadingPage.close()

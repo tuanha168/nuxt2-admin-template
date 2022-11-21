@@ -11,9 +11,9 @@ export default {
     background: 'white'
   },
 
-  // router: {
-  //   middleware: ['auth']
-  // },
+  router: {
+    middleware: ['auth']
+  },
 
   publicRuntimeConfig: {
     axios: {
@@ -53,8 +53,8 @@ export default {
     '@/plugins/antd-ui',
     '@/plugins/vee-validate',
     '@/plugins/loading-page',
-    '@/plugins/custom-listener',
-    '@/plugins/api.js'
+    '@/plugins/s3-upload.client',
+    '@/plugins/custom-listener'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -106,11 +106,11 @@ export default {
     strategies: {
       local: {
         token: {
-          property: 'data.access_token',
+          property: 'token',
           global: false
         },
         user: {
-          property: 'data'
+          property: 'user'
         },
         endpoints: {
           login: {
@@ -119,7 +119,7 @@ export default {
           },
           logout: false,
           user: {
-            url: `auth/profile`,
+            url: `auth/user`,
             method: 'get'
           }
         }
