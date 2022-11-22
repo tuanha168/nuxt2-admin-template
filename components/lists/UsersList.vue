@@ -31,10 +31,6 @@
         a-row(:span="24" :style="{ textAlign: 'center' }")
           project-submit-button(label="Search")
 
-  .table-operations
-    nuxt-link.ms-1(to="/users/new")
-      a-button(type="primary" icon="plus") Create User
-
   a-table.project-table(
     :columns="columns"
     :data-source="usersList"
@@ -74,7 +70,7 @@ export default {
     pagination: {
       size: 'small',
       hideOnSinglePage: true,
-      pageSize: 5,
+      pageSize: 10,
       position: 'bottom',
       current: 1
     }
@@ -107,7 +103,7 @@ export default {
           ...this.filterParams
         })
         this.usersList = res.users
-        this.pagination = this.usersList.length
+        this.pagination.total = this.usersList.length
       } catch (err) {
         this.handleError(err)
       } finally {

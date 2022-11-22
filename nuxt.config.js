@@ -119,7 +119,7 @@ export default {
           },
           logout: false,
           user: {
-            url: `auth/user`,
+            url: `auth/profile`,
             method: 'get'
           }
         }
