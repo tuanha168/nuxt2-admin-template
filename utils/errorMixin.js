@@ -8,8 +8,8 @@ export default {
     },
     handleError(err) {
       let errorDetails
-      this.errorFromServer = _.get(err, 'response.data.meta.message')
-        ? err.response.data.meta.message
+      this.errorFromServer = _.get(err, 'response.data.message')
+        ? err.response.data.message
         : 'Error'
       if (this.$refs.form && err.response && err.response.data.meta.errors) {
         const errors = err.response.data.meta.errors

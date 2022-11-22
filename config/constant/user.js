@@ -42,7 +42,7 @@ export const UserConstant = Object.freeze({
       key: 'action',
       align: 'center',
       scopedSlots: { customRender: 'action' },
-      width: 80
+      width: 100
     }
   ]
 })

@@ -1,5 +1,5 @@
 <template lang="pug">
-.users
+.category
   #advanced-search
     validation-observer(ref="form" v-slot="{ passes }")
       a-form-model(@submit="passes(handleFilter)" @submit.native.prevent)
@@ -16,24 +16,16 @@
               colon
             )
 
-          a-col(:span="8")
-            project-text(
-              label="Email"
-              vid="email"
-              type="text"
-              size="large"
-              rules="max:255"
-              :max-length="255"
-              v-model="tmpFilterParams.email"
-              colon
-            )
-
         a-row(:span="24" :style="{ textAlign: 'center' }")
           project-submit-button(label="Search")
 
+  .table-operations
+    nuxt-link.ms-1(to="/categories/new")
+      a-button(type="primary" icon="plus") Create category
+
   a-table.project-table(
     :columns="columns"
-    :data-source="usersList"
+    :data-source="categoriesList"
     :loading="loading"
     :pagination="pagination"
     row-key="_id"
@@ -41,30 +33,39 @@
     size="small"
     @change="handleTableChange"
   )
-    span(slot="sex" slot-scope="text")
-      a-tag(:color="text ? 'yellow' : '#87d068'") {{ text ? "Female" : "Male" }}
+    span(slot="image" slot-scope="text")
+      img(:src="text" style="width: 100%; height: 100%; object-fit: cover")
+    span(slot="timeFormat" slot-scope="text")
+      | {{ text ? $moment(text).format("YYYY-MM-DD HH:mm") : "-" }}
     span(slot="action" slot-scope="record")
       a-space(size="middle")
-        nuxt-link(:to="`/users/${record._id}/details`")
+        nuxt-link(:to="`/categories/${record._id}/edit`")
           a-button(type="primary" icon="edit" size="small")
+        a-popconfirm(
+          title="Do you really want to Delete this category?"
+          placement="topRight"
+          ok-text="Yes"
+          cancel-text="No"
+          @confirm="deleteCategory(record._id)"
+        )
+          a-button(type="danger" icon="delete" size="small")
 </template>
 
 <script>
 import errorMixin from '@/utils/errorMixin'
 import crumbMixin from '@/utils/crumbMixin'
-import { UserConstant } from '@/config/constant/user'
+import { CategoryConstant } from '@/config/constant/category'
 
 export default {
-  name: 'UsersListComponent',
+  name: 'CategoriesListComponent',
   mixins: [errorMixin, crumbMixin],
   data: () => ({
-    crumbs: _.clone(UserConstant.CRUMBS),
-    columns: _.clone(UserConstant.COLUMNS),
+    crumbs: _.clone(CategoryConstant.CRUMBS),
+    columns: _.clone(CategoryConstant.COLUMNS),
     loading: false,
-    usersList: null,
+    categoriesList: [],
     tmpFilterParams: {
-      name: null,
-      email: null
+      name: null
     },
     filterParams: {},
     pagination: {
@@ -76,34 +77,46 @@ export default {
     }
   }),
   head: () => ({
-    title: 'Users List',
+    title: 'Categories List',
     meta: [
       {
-        content: 'Users List Page'
+        content: 'Categories List Page'
       }
     ]
   }),
   created() {
-    this.getListUsers()
+    this.getListCategories()
     this.setCrumbs(this.crumbs)
-    this.setTitle('Users List')
+    this.setTitle('Categories List')
   },
   methods: {
+    async deleteCategory(categoryId) {
+      try {
+        this.$loadingPage.open()
+        await this.$api.deleteCategory(categoryId)
+        this.$message.success('Deleted Successfully')
+        await this.getListCategories()
+      } catch (err) {
+        this.handleError(err)
+      } finally {
+        this.$loadingPage.close()
+      }
+    },
     handleFilter() {
       this.filterParams = _.clone(this.tmpFilterParams)
-      this.getListUsers()
+      this.getListCategories()
     },
     handleTableChange(pagination) {
       this.pagination.current = pagination.current
     },
-    async getListUsers() {
+    async getListCategories() {
       try {
         this.loading = true
-        const res = await this.$api.listUsers({
+        const res = await this.$api.listCategories({
           ...this.filterParams
         })
-        this.usersList = res.users
-        this.pagination.total = this.usersList.length
+        this.categoriesList = res.categories
+        this.pagination.total = this.categoriesList.length
       } catch (err) {
         this.handleError(err)
       } finally {
