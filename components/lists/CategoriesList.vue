@@ -36,7 +36,7 @@
     span(slot="image" slot-scope="text")
       img(:src="text" style="width: 100%; height: 100%; object-fit: cover")
     span(slot="timeFormat" slot-scope="text")
-      | {{ text ? $moment(text).format('YYYY-MM-DD HH:mm') : '-' }}
+      | {{ text ? $moment(text).format("YYYY-MM-DD HH:mm") : "-" }}
     span(slot="action" slot-scope="record")
       a-space(size="middle")
         nuxt-link(:to="`/categories/${record._id}/edit`")

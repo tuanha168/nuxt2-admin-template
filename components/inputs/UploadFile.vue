@@ -13,7 +13,7 @@ div
       :help="slotProps.errors[0]"
     )
       template(slot="label")
-        span(:class="{ 'ant-form-item-required': isRequired }") {{ showLabel ? label : '' }}
+        span(:class="{ 'ant-form-item-required': isRequired }") {{ showLabel ? label : "" }}
 
       a-upload.avatar-uploader(
         :name="vid"

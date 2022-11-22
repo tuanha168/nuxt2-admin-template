@@ -52,7 +52,7 @@
     span(slot="category" slot-scope="record")
       | {{ record.name }}
     span(slot="timeFormat" slot-scope="text")
-      | {{ text ? $moment(text).format('YYYY-MM-DD HH:mm') : '-' }}
+      | {{ text ? $moment(text).format("YYYY-MM-DD HH:mm") : "-" }}
     span(slot="action" slot-scope="record")
       a-space(size="middle")
         nuxt-link(:to="`/games/${record._id}/edit`")
