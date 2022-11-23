@@ -81,6 +81,7 @@ export default {
     loading: false,
     loadingCat: false,
     gamesList: [],
+    categories: [],
     tmpFilterParams: {
       name: null,
       category: null
