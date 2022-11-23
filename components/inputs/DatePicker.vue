@@ -15,7 +15,6 @@ validation-provider(
     template(slot="label")
       span(:class="{ 'ant-form-item-required': isRequired }") {{ showLabel ? label : "" }}
     a-date-picker.project-date-picker(
-      :disabled-date="disableDate"
       v-bind="$attrs"
       v-model="newValue"
       @change="(val) => $emit('change', val)"
@@ -36,16 +35,9 @@ export default {
       set(val) {
         this.$emit(
           'input',
-          val ? val.format(this.$attrs.format || 'YYYY-MM-DD HH:mm:ss') : null
+          val ? val.format(this.$attrs.format || 'YYYY-MM-DD') : null
         )
       }
-    }
-  },
-  methods: {
-    disableDate(current) {
-      return (
-        current && current < this.$moment().subtract(1, 'days').endOf('day')
-      )
     }
   }
 }

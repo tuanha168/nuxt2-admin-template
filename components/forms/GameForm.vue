@@ -42,6 +42,14 @@ validation-observer(ref="form")
       v-model="form.name"
     )
 
+    project-date-picker(
+      label="Release date"
+      vid="release_date"
+      size="large"
+      rules="required"
+      v-model="form.release_date"
+    )
+
     project-textarea(
       label="Description"
       vid="description"
@@ -102,6 +110,7 @@ validation-observer(ref="form")
       vid="images"
       :rules="`${form.images.length > 0 ? '' : 'required|'}image|size:10240`"
       accept="image/*"
+      max="3"
       v-model="form.images"
       @uploading="handleUpload"
     )
@@ -134,7 +143,8 @@ export default {
       price: 0,
       discount: 0,
       images: [],
-      feature_image: null
+      feature_image: null,
+      release_date: null
     }
   }),
   computed: {
@@ -171,6 +181,7 @@ export default {
         this.$loadingPage.open()
         const res = await this.$api.showGame(this.gameId)
         this.form = _.assign({}, this.form, res.game)
+        this.form.release_date = this.$moment(this.form.release_date)
         this.form.category = res.game?.category._id
       } catch (err) {
         this.handleError(err)
