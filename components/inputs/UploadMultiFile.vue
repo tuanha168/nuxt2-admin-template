@@ -7,73 +7,87 @@ div
     v-slot="slotProps"
     ref="fileUpload"
   )
-    a-form-model-item.uploader(
+    a-form-model-item.multi-uploader(
       :validate-status="resolveState(slotProps)"
       :colon="colon"
       :help="slotProps.errors[0]"
+      :wrapper-col="{ span: 12 }"
     )
       template(slot="label")
         span(:class="{ 'ant-form-item-required': isRequired }") {{ showLabel ? label : "" }}
 
-      a-upload.avatar-uploader(
-        :name="vid"
-        list-type="picture-card"
-        :disabled="disabled"
-        :show-upload-list="false"
-        :before-upload="beforeUpload"
-        :custom-request="handleUpload"
-        :accept="accept"
-        @change="handleChange"
-      )
-        transition(name="fade-transform")
-          .action(v-show="newValue")
-            a-button(
-              v-if="!isFileUpload"
-              type="primary"
-              shape="circle"
-              icon="eye"
-              size="small"
-              @click.stop="handlePreview"
-            )
-            a-button(
-              v-else
-              type="primary"
-              shape="circle"
-              icon="download"
-              size="small"
-              @click.stop="handleDownloadFile"
-            )
-            a-button(
-              type="danger"
-              shape="circle"
-              icon="delete"
-              size="small"
-              v-show="!disabled"
-              @click.stop="handleRemove"
-            )
-
-        template(v-if="newValue")
-          img(
-            v-show="isImageUpload"
-            :src="filePreview ? filePreview : newValue"
-            alt=""
+      a-row.multi-file-uploader
+        a-col(:span="8" v-for="(item, index) in value" :key="index")
+          a-upload.avatar-uploader(
+            :name="vid"
+            list-type="picture-card"
+            :disabled="disabled"
+            :show-upload-list="false"
+            :before-upload="beforeUpload"
+            :custom-request="(file) => { handleUpload(file, index); }"
+            :accept="accept"
           )
-          a-icon(
-            v-show="isFileUpload"
-            type="file-pdf"
-            style="font-size: 100px"
+            transition(name="fade-transform")
+              .action(v-show="item")
+                a-button(
+                  v-if="!isFileUpload"
+                  type="primary"
+                  shape="circle"
+                  icon="eye"
+                  size="small"
+                  @click.stop="handlePreview(item)"
+                )
+                a-button(
+                  v-else
+                  type="primary"
+                  shape="circle"
+                  icon="download"
+                  size="small"
+                  @click.stop="handleDownloadFile"
+                )
+                a-button(
+                  type="danger"
+                  shape="circle"
+                  icon="delete"
+                  size="small"
+                  v-show="!disabled"
+                  @click.stop="handleRemove(index)"
+                )
+            template(v-if="item")
+              img(v-show="isImageUpload" :src="previewFiles[index]" alt="")
+              a-icon(
+                v-show="isFileUpload"
+                type="file-pdf"
+                style="font-size: 100px"
+              )
+              a-icon(
+                v-show="isVideoUpload"
+                type="play-square"
+                style="font-size: 100px"
+              )
+            div(v-else)
+              a-progress(:percent="uploadingList[index]" size="small")
+            p.error-from-server(v-show="errorFromServer") {{ errorFromServer }}
+        a-col(:span="8" v-if="value.length < max")
+          a-upload.avatar-uploader(
+            :name="vid"
+            list-type="picture-card"
+            :disabled="disabled"
+            :show-upload-list="false"
+            :before-upload="beforeUpload"
+            :custom-request="handleUpload"
+            :accept="accept"
           )
-          a-icon(
-            v-show="isVideoUpload"
-            type="play-square"
-            style="font-size: 100px"
-          )
-        div(v-else)
-          a-progress(:percent="uploadingPercent" size="small" v-if="uploading")
-          template(v-else)
-            a-icon(type="plus")
-            .ant-upload-text Upload
-        p.error-from-server(v-show="errorFromServer") {{ errorFromServer }}
+            div
+              a-progress(
+                :percent="uploadingPercent"
+                size="small"
+                v-if="uploading"
+              )
+              template(v-else)
+                a-icon(type="plus")
+                .ant-upload-text アップロード
+            p.error-from-server(v-show="errorFromServer") {{ errorFromServer }}
 
   a-modal(
     :visible="previewVisible"
@@ -91,7 +105,7 @@ div
       v-show="isImageUpload"
       alt="img-preview"
       style="width: 100%"
-      :src="filePreview ? filePreview : newValue"
+      :src="previewUrl"
     )
     video(
       v-if="previewVisible && isVideoUpload"
@@ -99,7 +113,7 @@ div
       height="auto"
       controls
     )
-      source(:src="filePreview ? filePreview : newValue")
+      source(:src="previewUrl")
 </template>
 
 <script>
@@ -113,7 +127,7 @@ function getBase64(file) {
   })
 }
 export default {
-  name: 'UploadFile',
+  name: 'UploadMultiFile',
   mixins: [inputMixin],
   props: {
     accept: {
@@ -128,14 +142,20 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    max: {
+      type: Number,
+      default: 5
     }
   },
   data: () => ({
     previewVisible: false,
     uploadingPercent: 0,
     uploading: false,
-    filePreview: null,
-    errorFromServer: null
+    previewUrl: null,
+    errorFromServer: null,
+    uploadingList: 0,
+    previewFiles: []
   }),
   computed: {
     isImageUpload() {
@@ -150,39 +170,50 @@ export default {
   },
   methods: {
     beforeUpload(file) {
-      this.handleRemove()
-      this.filePreview = null
       this.errorFromServer = null
       this.$refs.fileUpload.reset()
       // eslint-disable-next-line no-async-promise-executor
-      return new Promise(async (resolve, _reject) => {
+      return new Promise(async (resolve, reject) => {
         const { valid } = await this.$refs.fileUpload.validate(file)
         return valid ? resolve() : false
       })
     },
-    async handleChange(info) {
-      this.filePreview = await getBase64(info.file.originFileObj)
-    },
-    async handleUpload({ file }) {
+    async handleUpload({ file }, index) {
       try {
         this.$emit('uploading', true)
-        this.handleRemove()
-        this.filePreview = null
+        this.previewUrl = null
         this.$refs.fileUpload.reset()
         const valid = await this.$refs.fileUpload.validate(file)
         if (!valid) return
-        this.uploading = true
+        if (index >= 0) {
+          this.newValue[index] = null
+          this.newValue = [...this.newValue]
+        } else {
+          this.uploading = true
+        }
         // const self = this
         // const res = await this.$uploadFileToS3(
         //   file,
         //   function (uploadingPercent) {
-        //     self.uploadingPercent = uploadingPercent
+        //     if (index >= 0) {
+        //       const temp = {}
+        //       temp[index] = uploadingPercent
+        //       self.uploadingList = { ...temp }
+        //     } else {
+        //       self.uploadingPercent = uploadingPercent
+        //     }
         //   }
         // )
-        // this.newValue = res[0]
-        this.newValue = file
+        if (index >= 0) {
+          this.newValue[index] = file
+          this.newValue = [...this.newValue]
+          this.previewFiles[index] = await getBase64(file)
+        } else {
+          this.newValue.push(file)
+          this.previewFiles.push(await getBase64(file))
+        }
       } catch (err) {
-        this.filePreview = null
+        this.previewUrl = null
         this.errorFromServer = _.get(err, 'response.data.meta.message')
           ? err.response.data.meta.message
           : 'Something went wrong.'
@@ -190,16 +221,21 @@ export default {
           this.errorFromServer = err.response.data.meta.errors.file_upload[0]
         }
       } finally {
-        this.uploadingPercent = 0
-        this.uploading = false
+        if (index >= 0) {
+          this.uploadingList[index] = 0
+        } else {
+          this.uploadingPercent = 0
+          this.uploading = false
+        }
         this.$emit('uploading', false)
       }
     },
-    handlePreview() {
+    handlePreview(url) {
+      this.previewUrl = url
       this.previewVisible = true
     },
-    handleRemove() {
-      this.newValue = null
+    handleRemove(index) {
+      this.newValue.splice(index, 1)
     },
     handleCancel() {
       this.previewVisible = false
@@ -208,9 +244,11 @@ export default {
       const fileLink = document.createElement('a')
       const temp = this.newValue.split('/')
       const fileName = temp[temp.length - 1]
+
       fileLink.href = this.newValue
       fileLink.setAttribute('download', fileName)
       document.body.appendChild(fileLink)
+
       fileLink.click()
     }
   }
@@ -218,10 +256,9 @@ export default {
 </script>
 
 <style lang="scss">
-.uploader {
+.multi-uploader {
   .ant-form-item-control {
     line-height: 1 !important;
-    position: relative;
   }
   .avatar-uploader {
     margin-top: 10px;
@@ -230,8 +267,8 @@ export default {
       width: 128px;
       height: 128px;
       img {
-        max-width: 100%;
-        height: auto;
+        max-width: 112px;
+        max-height: 112px;
       }
     }
   }
@@ -240,12 +277,18 @@ export default {
     font-size: 32px;
     color: #999;
   }
+
   .ant-upload-select-picture-card .ant-upload-text {
     margin-top: 8px;
     color: #666;
   }
+
   .ant-upload.ant-upload-select-picture-card {
     margin: 0;
+  }
+
+  .ant-form-explain {
+    margin-top: 1.5em;
   }
 }
 .action {
@@ -265,10 +308,9 @@ export default {
   white-space: nowrap;
   font-size: 0.8rem;
 }
-.message_upload {
+.message_multi-file {
   position: absolute;
-  top: -4em;
-  left: 11em;
+  bottom: -3em;
   font-style: italic;
   font-size: 0.9em;
 }
