@@ -46,8 +46,8 @@ validation-observer(ref="form")
       label="Description"
       vid="description"
       size="large"
-      rules="max:255"
-      :max-length="255"
+      rules="max:1000"
+      :max-length="1000"
       v-model="form.description"
     )
 
@@ -88,13 +88,21 @@ validation-observer(ref="form")
     )
 
     project-upload-file(
-      label="Image"
+      label="Banner"
       vid="feature_image"
-      :rules="`${form.feature_image ? '' : 'required|'}size:20480|ext:jpg,jpeg,gif,png`"
+      :rules="`${form.feature_image ? '' : 'required|'}image|size:10240`"
       :multiple="false"
       accept="image/*"
       type-upload="image"
       v-model="form.feature_image"
+      @uploading="handleUpload"
+    )
+    project-upload-multi-file(
+      label="Images"
+      vid="images"
+      :rules="`${form.images.length > 0 ? '' : 'required|'}image|size:10240`"
+      accept="image/*"
+      v-model="form.images"
       @uploading="handleUpload"
     )
 
@@ -124,7 +132,9 @@ export default {
       developer: null,
       publisher: null,
       price: 0,
-      discount: 0
+      discount: 0,
+      images: [],
+      feature_image: null
     }
   }),
   computed: {
