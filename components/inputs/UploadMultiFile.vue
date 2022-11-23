@@ -168,6 +168,18 @@ export default {
       return this.typeUpload === 'video'
     }
   },
+  watch: {
+    async value(val) {
+      this.previewFiles = await Promise.all(
+        val.map((item) => {
+          if (typeof item === 'string') {
+            return item
+          }
+          return getBase64(item)
+        })
+      )
+    }
+  },
   methods: {
     beforeUpload(file) {
       this.errorFromServer = null
