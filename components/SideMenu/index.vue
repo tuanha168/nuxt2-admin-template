@@ -1,7 +1,12 @@
 <template lang="pug">
 a-layout-sider.custom-sider(v-model="collapsed" :trigger="null" collapsible)
   .logo
-    img(src="~/assets/img/logo.png" width="100%" height="100%")
+    img(
+      src="~/assets/img/logo.png"
+      width="100%"
+      height="100%"
+      style="object-fit: contain"
+    )
   a-menu(
     style="background-color: #2a2a2a"
     mode="inline"
@@ -57,15 +62,21 @@ export default {
         },
         {
           label: 'Games',
-          icon: 'game',
+          icon: 'rocket',
           key: '/games',
           url: '/games'
         },
         {
           label: 'Categories',
-          icon: 'category',
+          icon: 'folder-open',
           key: '/categories',
           url: '/categories'
+        },
+        {
+          label: 'Purchase Codes',
+          icon: 'pay-circle',
+          key: '/codes',
+          url: '/codes'
         }
       ]
     }

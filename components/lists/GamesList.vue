@@ -115,11 +115,11 @@ export default {
         this.$loadingPage.open()
         await this.$api.deleteGame(gameId)
         this.$message.success('Deleted Successfully')
-        await this.getListGames()
       } catch (err) {
         this.handleError(err)
       } finally {
         this.$loadingPage.close()
+        this.getListGames()
       }
     },
     handleFilter() {
