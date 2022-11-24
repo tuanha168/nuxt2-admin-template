@@ -95,11 +95,11 @@ export default {
         this.$loadingPage.open()
         await this.$api.deleteCategory(categoryId)
         this.$message.success('Deleted Successfully')
-        await this.getListCategories()
       } catch (err) {
         this.handleError(err)
       } finally {
         this.$loadingPage.close()
+        this.getListCategories()
       }
     },
     handleFilter() {

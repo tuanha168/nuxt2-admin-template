@@ -11,7 +11,7 @@ export default {
       this.errorFromServer = _.get(err, 'response.data.message')
         ? err.response.data.message
         : 'Error'
-      if (this.$refs.form && err.response && err.response.data.meta.errors) {
+      if (this.$refs.form && err.response?.data?.meta?.errors) {
         const errors = err.response.data.meta.errors
         for (const property in errors) {
           this.$refs.form.setErrors({
@@ -26,7 +26,7 @@ export default {
             errorDetails = errors[property][0]
           }
         }
-      } else if (err.response && err.response.data.meta.errors) {
+      } else if (err.response?.data?.meta?.errors) {
         const errors = err.response.data.meta.errors
         errorDetails = errors[Object.keys(errors)[0]]
       }

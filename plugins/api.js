@@ -55,7 +55,11 @@ export default function ({ $axios, error, app }, inject) {
     createCategory: (payload) => axios.$post(`categories`, payload),
     updateCategory: (categoryId, payload) =>
       axios.$put(`categories/${categoryId}`, payload),
-    deleteCategory: (categoryId) => axios.$delete(`categories/${categoryId}`)
+    deleteCategory: (categoryId) => axios.$delete(`categories/${categoryId}`),
+
+    // Codes
+    generateCode: () => axios.$post(`auth/code`),
+    listCodes: (params) => axios.$get(`codes`, { params })
   }
   inject('api', api)
 }
