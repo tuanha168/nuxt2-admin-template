@@ -24,6 +24,11 @@ export const CodeConstant = Object.freeze({
       key: 'code'
     },
     {
+      title: 'Value',
+      dataIndex: 'value',
+      key: 'value'
+    },
+    {
       title: 'Status',
       dataIndex: 'is_activated',
       key: 'is_activated',
