@@ -59,7 +59,7 @@ export default function ({ $axios, error, app }, inject) {
 
     // Codes
     generateCode: () => axios.$post(`auth/code`),
-    listCodes: (params) => axios.$get(`code`, { params })
+    listCodes: (params) => axios.$get(`auth/code`, { params })
   }
   inject('api', api)
 }
