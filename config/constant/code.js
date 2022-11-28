@@ -19,24 +19,24 @@ export const CodeConstant = Object.freeze({
       width: 220
     },
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      ellipsis: true
+      title: 'Code',
+      dataIndex: 'code',
+      key: 'code'
     },
     {
-      title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
-      scopedSlots: { customRender: 'category' },
-      ellipsis: true
-    },
-    {
-      title: 'Discount',
-      dataIndex: 'discount',
-      key: 'discount',
+      title: 'Status',
+      dataIndex: 'is_activated',
+      key: 'is_activated',
       align: 'center',
+      scopedSlots: { customRender: 'status' },
       width: 100
+    },
+    {
+      title: 'Expired Time',
+      dataIndex: 'expired_time',
+      key: 'expired_time',
+      align: 'center',
+      scopedSlots: { customRender: 'timeFormat' }
     },
     {
       title: 'Created At',
@@ -44,13 +44,6 @@ export const CodeConstant = Object.freeze({
       key: 'createdAt',
       align: 'center',
       scopedSlots: { customRender: 'timeFormat' }
-    },
-    {
-      title: '',
-      key: 'action',
-      align: 'center',
-      scopedSlots: { customRender: 'action' },
-      width: 100
     }
   ]
 })

@@ -13,8 +13,8 @@
     size="small"
     @change="handleTableChange"
   )
-    span(slot="category" slot-scope="record")
-      | {{ record.name }}
+    span(slot="status" slot-scope="text")
+      a-tag(:color="!!text ? 'yellow' : '#87d068'") {{ text ? "Active" : "Inactive" }}
     span(slot="timeFormat" slot-scope="text")
       | {{ text ? $moment(text).format("YYYY-MM-DD HH:mm") : "-" }}
 </template>
