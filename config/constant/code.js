@@ -12,13 +12,6 @@ export const CodeConstant = Object.freeze({
   ],
   COLUMNS: [
     {
-      title: 'ID',
-      dataIndex: '_id',
-      key: '_id',
-      scopedSlots: { customRender: 'id' },
-      width: 220
-    },
-    {
       title: 'Code',
       dataIndex: 'code',
       key: 'code'
@@ -50,5 +43,10 @@ export const CodeConstant = Object.freeze({
       align: 'center',
       scopedSlots: { customRender: 'timeFormat' }
     }
-  ]
+  ],
+  STATUS: {
+    Used: 'yellow',
+    Available: 'green',
+    Expired: 'red'
+  }
 })

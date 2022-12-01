@@ -12,10 +12,10 @@ export const UserConstant = Object.freeze({
   ],
   COLUMNS: [
     {
-      title: 'ID',
-      dataIndex: '_id',
-      key: 'id',
-      scopedSlots: { customRender: 'id' }
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      ellipsis: true
     },
     {
       title: 'User Name',

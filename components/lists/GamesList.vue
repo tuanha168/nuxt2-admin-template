@@ -20,7 +20,9 @@
             project-select(
               label="Category"
               vid="category"
+              mode="multiple"
               size="large"
+              allowClear
               placeholder="Please select category"
               v-model="tmpFilterParams.category"
               :disabled="loadingCat"
@@ -41,7 +43,7 @@
 
   a-table.project-table(
     :columns="columns"
-    :data-source="gamesList"
+    :data-source="filterGamesList"
     :loading="loading"
     :pagination="pagination"
     row-key="_id"
@@ -49,6 +51,8 @@
     size="small"
     @change="handleTableChange"
   )
+    span(slot="image" slot-scope="text")
+      img(:src="text" style="width: 100%; height: 100%; object-fit: cover")
     span(slot="category" slot-scope="record")
       | {{ record.name }}
     span(slot="timeFormat" slot-scope="text")
@@ -81,10 +85,11 @@ export default {
     loading: false,
     loadingCat: false,
     gamesList: [],
+    filterGamesList: [],
     categories: [],
     tmpFilterParams: {
       name: null,
-      category: null
+      category: []
     },
     filterParams: {},
     pagination: {
@@ -124,7 +129,29 @@ export default {
     },
     handleFilter() {
       this.filterParams = _.clone(this.tmpFilterParams)
-      this.getListGames()
+      this.pagination.current = 1
+      if (this.filterParams.category.length === 0 && !this.filterParams.name) {
+        this.filterGamesList = _.clone(this.gamesList)
+        return
+      }
+      this.filterGamesList = this.gamesList.filter((game) => {
+        let isMatch = false
+        if (this.filterParams.category) {
+          isMatch = this.filterParams.category.includes(game.category._id)
+        }
+        if (this.filterParams.name) {
+          isMatch =
+            this.filterParams.category.length > 0
+              ? isMatch &&
+                game.name
+                  ?.toLowerCase()
+                  .includes(this.filterParams.name.toLowerCase())
+              : game.name
+                  ?.toLowerCase()
+                  .includes(this.filterParams.name.toLowerCase())
+        }
+        return isMatch
+      })
     },
     handleTableChange(pagination) {
       this.pagination.current = pagination.current
@@ -136,6 +163,7 @@ export default {
           ...this.filterParams
         })
         this.gamesList = res.games
+        this.filterGamesList = res.games
         this.pagination.total = this.gamesList.length
       } catch (err) {
         this.handleError(err)

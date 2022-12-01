@@ -12,13 +12,6 @@ export const CategoryConstant = Object.freeze({
   ],
   COLUMNS: [
     {
-      title: 'ID',
-      dataIndex: '_id',
-      key: '_id',
-      scopedSlots: { customRender: 'id' },
-      width: 220
-    },
-    {
       title: 'Image',
       dataIndex: 'image',
       key: 'image',
