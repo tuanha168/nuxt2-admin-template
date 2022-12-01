@@ -13,8 +13,8 @@
     size="small"
     @change="handleTableChange"
   )
-    span(slot="status" slot-scope="text")
-      a-tag(:color="!!text ? 'yellow' : '#87d068'") {{ text ? "Active" : "Inactive" }}
+    span(slot="status" slot-scope="_, record")
+      a-tag(:color="statusCode[checkStatus(record)]") {{ checkStatus(record) }}
     span(slot="timeFormat" slot-scope="text")
       | {{ text ? $moment(text).format("YYYY-MM-DD HH:mm") : "-" }}
 </template>
@@ -30,6 +30,7 @@ export default {
   data: () => ({
     crumbs: _.clone(CodeConstant.CRUMBS),
     columns: _.clone(CodeConstant.COLUMNS),
+    statusCode: _.clone(CodeConstant.STATUS),
     loading: false,
     loadingCat: false,
     codesList: [],
@@ -93,6 +94,13 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+    checkStatus(record) {
+      return this.$moment(record.expired_time).isSameOrAfter()
+        ? record.status
+          ? 'Used'
+          : 'Available'
+        : 'Expired'
     }
   }
 }

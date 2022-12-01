@@ -92,6 +92,8 @@ validation-observer(ref="form")
       vid="discount"
       size="large"
       rules="required"
+      :max="100"
+      :min="0"
       v-model="form.discount"
     )
 

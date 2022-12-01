@@ -134,6 +134,11 @@ export default {
     scss: ['@/assets/style/scss/variables/*.scss']
   },
 
+  moment: {
+    defaultLocale: 'vi',
+    locales: ['vi']
+  },
+
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     plugins: [

@@ -12,11 +12,11 @@ export const GameConstant = Object.freeze({
   ],
   COLUMNS: [
     {
-      title: 'ID',
-      dataIndex: '_id',
-      key: '_id',
-      scopedSlots: { customRender: 'id' },
-      width: 220
+      title: 'Banner',
+      dataIndex: 'feature_image',
+      key: 'feature_image',
+      scopedSlots: { customRender: 'image' },
+      width: 200
     },
     {
       title: 'Name',

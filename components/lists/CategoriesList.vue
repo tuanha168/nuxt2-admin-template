@@ -25,7 +25,7 @@
 
   a-table.project-table(
     :columns="columns"
-    :data-source="categoriesList"
+    :data-source="filterCategoriesList"
     :loading="loading"
     :pagination="pagination"
     row-key="_id"
@@ -64,6 +64,7 @@ export default {
     columns: _.clone(CategoryConstant.COLUMNS),
     loading: false,
     categoriesList: [],
+    filterCategoriesList: [],
     tmpFilterParams: {
       name: null
     },
@@ -104,7 +105,15 @@ export default {
     },
     handleFilter() {
       this.filterParams = _.clone(this.tmpFilterParams)
-      this.getListCategories()
+      this.pagination.current = 1
+      if (!this.filterParams.name) {
+        this.filterCategoriesList = _.clone(this.categoriesList)
+      }
+      this.filterCategoriesList = this.categoriesList.filter((category) =>
+        category.name
+          .toLowerCase()
+          .includes(this.filterParams.name.toLowerCase())
+      )
     },
     handleTableChange(pagination) {
       this.pagination.current = pagination.current
@@ -116,6 +125,7 @@ export default {
           ...this.filterParams
         })
         this.categoriesList = res.categories
+        this.filterCategoriesList = res.categories
         this.pagination.total = this.categoriesList.length
       } catch (err) {
         this.handleError(err)

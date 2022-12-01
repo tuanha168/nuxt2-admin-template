@@ -33,7 +33,7 @@
 
   a-table.project-table(
     :columns="columns"
-    :data-source="usersList"
+    :data-source="filterUsersList"
     :loading="loading"
     :pagination="pagination"
     row-key="_id"
@@ -62,6 +62,7 @@ export default {
     columns: _.clone(UserConstant.COLUMNS),
     loading: false,
     usersList: null,
+    filterUsersList: null,
     tmpFilterParams: {
       name: null,
       email: null
@@ -91,7 +92,34 @@ export default {
   methods: {
     handleFilter() {
       this.filterParams = _.clone(this.tmpFilterParams)
-      this.getListUsers()
+      this.pagination.current = 1
+      if (!this.filterParams.name && !this.filterParams.email) {
+        this.filterUsersList = _.clone(this.usersList)
+        return
+      }
+      this.filterUsersList = this.usersList.filter((user) => {
+        let isMatch = false
+        if (this.filterParams.name) {
+          isMatch =
+            user.name
+              ?.toLowerCase()
+              .includes(this.filterParams.name.toLowerCase()) ||
+            user.username
+              ?.toLowerCase()
+              .includes(this.filterParams.name.toLowerCase())
+        }
+        if (this.filterParams.email) {
+          isMatch = this.filterParams.name
+            ? isMatch &&
+              user.email
+                ?.toLowerCase()
+                .includes(this.filterParams.email.toLowerCase())
+            : user.email
+                ?.toLowerCase()
+                .includes(this.filterParams.email.toLowerCase())
+        }
+        return isMatch
+      })
     },
     handleTableChange(pagination) {
       this.pagination.current = pagination.current
@@ -103,6 +131,7 @@ export default {
           ...this.filterParams
         })
         this.usersList = res.users
+        this.filterUsersList = res.users
         this.pagination.total = this.usersList.length
       } catch (err) {
         this.handleError(err)
