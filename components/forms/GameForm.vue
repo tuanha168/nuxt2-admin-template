@@ -110,7 +110,7 @@ validation-observer(ref="form")
       vid="images"
       :rules="`${form.images.length > 0 ? '' : 'required|'}image|size:10240`"
       accept="image/*"
-      max="3"
+      :max="3"
       v-model="form.images"
       @uploading="handleUpload"
     )
@@ -217,6 +217,12 @@ export default {
         this.$loadingPage.open()
         const formData = new FormData()
         Object.keys(this.form).forEach((key) => {
+          if (key === 'images') {
+            this.form[key].forEach((image) => {
+              formData.append(key, image)
+            })
+            return
+          }
           formData.append(key, this.form[key])
         })
         let successMsg = 'Edit Successfully.'
