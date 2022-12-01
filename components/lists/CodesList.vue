@@ -89,6 +89,7 @@ export default {
         })
         this.codesList = res.codes
         this.pagination.total = this.codesList.length
+        this.pagination.current = 1
       } catch (err) {
         this.handleError(err)
       } finally {
