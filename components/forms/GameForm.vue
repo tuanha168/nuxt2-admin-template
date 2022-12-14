@@ -107,6 +107,7 @@ validation-observer(ref="form")
       v-model="form.feature_image"
       @uploading="handleUpload"
     )
+
     project-upload-multi-file(
       label="Images"
       vid="images"
@@ -122,6 +123,16 @@ validation-observer(ref="form")
         :label="gameId ? 'Update' : 'Create'"
         :disabled="uploading"
       )
+
+    project-upload-file(
+      label="Download File"
+      vid="download_link"
+      :rules="`${form.download_link ? '' : 'required'}`"
+      :multiple="false"
+      type-upload="file"
+      v-model="form.download_link"
+      @uploading="handleUpload"
+    )
 </template>
 
 <script>
@@ -146,7 +157,8 @@ export default {
       discount: 0,
       images: [],
       feature_image: null,
-      release_date: null
+      release_date: null,
+      download_link: null
     }
   }),
   computed: {
