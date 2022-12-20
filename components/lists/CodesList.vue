@@ -98,7 +98,7 @@ export default {
     },
     checkStatus(record) {
       return this.$moment(record.expired_time).isSameOrAfter()
-        ? record.status
+        ? record.is_activated
           ? 'Used'
           : 'Available'
         : 'Expired'
