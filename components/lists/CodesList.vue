@@ -97,11 +97,11 @@ export default {
       }
     },
     checkStatus(record) {
-      return this.$moment(record.expired_time).isSameOrAfter()
-        ? record.is_activated
-          ? 'Used'
-          : 'Available'
-        : 'Expired'
+      return record.is_activated
+        ? 'Used'
+        : this.$moment(record.expired_time).isSameOrAfter()
+          ? 'Available'
+          : 'Expired'
     }
   }
 }
